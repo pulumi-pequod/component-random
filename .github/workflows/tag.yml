@@ -30,6 +30,14 @@ jobs:
           find . -type f -not -path './.git/*' | head -20
 
       - name: Publish Component to Pulumi Org
+        if: github.event_name == 'push'
         run: |
           echo "Doing stuff"
-          pulumi version 
+          pulumi component publish --org my-org --name my-component --version ${{ github.ref_name }} --description "Release for tag ${{ github.ref_name }}"
+
+      - name: Manual run - Skip publishing
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "This is a manual workflow run."
+          echo "Skipping component publishing to prevent accidental releases."
+          echo "To publish, push a new tag instead of running manually."
