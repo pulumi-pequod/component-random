@@ -17,27 +17,27 @@ jobs:
           ref: ${{ github.ref }} # Checkout the specific tag that triggered the workflow
           fetch-depth: 0 # Ensures the build matches the git tag.
 
-      - name: Show repository contents
-        run: |
-          echo "Current working directory: $(pwd)"
-          echo "Git tag: ${{ github.ref_name }}"
-          echo "Git commit: $(git rev-parse HEAD)"
-          echo "Repository: ${{ github.repository }}"
-          echo "Repository owner: ${{ github.repository_owner }}"
-          echo "Repository name: ${{ github.event.repository.name }}"
-          echo "Repository URL: https://github.com/${{ github.repository }}"
-          echo ""
-          echo "Repository contents:"
-          ls -la
-          echo ""
-          echo "Directory tree:"
-          find . -type f -not -path './.git/*' | head -20
+      # - name: Show repository contents
+      #   run: |
+      #     echo "Current working directory: $(pwd)"
+      #     echo "Git tag: ${{ github.ref_name }}"
+      #     echo "Git commit: $(git rev-parse HEAD)"
+      #     echo "Repository: ${{ github.repository }}"
+      #     echo "Repository owner: ${{ github.repository_owner }}"
+      #     echo "Repository name: ${{ github.event.repository.name }}"
+      #     echo "Repository URL: https://github.com/${{ github.repository }}"
+      #     echo ""
+      #     echo "Repository contents:"
+      #     ls -la
+      #     echo ""
+      #     echo "Directory tree:"
+      #     find . -type f -not -path './.git/*' | head -20
 
       - name: Publish Component to Pulumi Org
         if: github.event_name == 'push'
         run: |
           echo "Publishing latest component version to the pequod Pulumi org."
-          pulumi package publish ${{ github.repository }} --publisher pequod
+          pulumi package publish https://github.com/${{ github.repository }} --publisher pequod
 
       - name: Manual run - Skip publishing
         if: github.event_name == 'workflow_dispatch'
