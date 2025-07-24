@@ -17,6 +17,12 @@ jobs:
           ref: ${{ github.ref }} # Checkout the specific tag that triggered the workflow
           fetch-depth: 0 # Ensures the build matches the git tag.
 
+      - name: Authenticate to Pulumi
+        uses: pulumi/auth-actions@v1
+        with:
+          organization: pequod
+          requested-token-type: urn:pulumi:token-type:access_token:organization
+
       # - name: Show repository contents
       #   run: |
       #     echo "Current working directory: $(pwd)"
@@ -43,5 +49,6 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "This is a manual workflow run."
+          echo "PULUMI_ACCESS_TOKEN: ${PULUMI_ACCESS_TOKEN}"
           echo "Skipping component publishing to prevent accidental releases."
           echo "To publish, push a new tag instead of running manually."
