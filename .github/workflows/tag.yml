@@ -55,6 +55,5 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "This is a manual workflow run."
-          echo "PULUMI_ACCESS_TOKEN: ${PULUMI_ACCESS_TOKEN}"
           echo "Skipping component publishing to prevent accidental releases."
           echo "To publish, push a new tag instead of running manually."
