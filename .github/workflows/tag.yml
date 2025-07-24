@@ -1,0 +1,22 @@
+name: Tag Release Workflow
+
+on:
+  push:
+    tags:
+      - '*' # Trigger on any tag push.
+
+jobs:
+  release-binaries:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Ensures the build matches the git tag.
+
+      - name: Checkout new tag
+        run: git checkout ${{ github.ref_name }} # Checkout the newly pushed tag.
+
+      - name: Next step
+        run: echo "Perform your release actions here, e.g., build, test, deploy" #
