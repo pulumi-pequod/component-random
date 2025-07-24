@@ -11,12 +11,22 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }} # Checkout the specific tag that triggered the workflow
           fetch-depth: 0 # Ensures the build matches the git tag.
 
-      - name: Checkout new tag
-        run: git checkout ${{ github.ref_name }} # Checkout the newly pushed tag.
+      - name: Show repository contents
+        run: |
+          echo "Current working directory: $(pwd)"
+          echo "Git tag: ${{ github.ref_name }}"
+          echo "Git commit: $(git rev-parse HEAD)"
+          echo ""
+          echo "Repository contents:"
+          ls -la
+          echo ""
+          echo "Directory tree:"
+          find . -type f -not -path './.git/*' | head -20
 
       - name: Next step
         run: echo "Perform your release actions here, e.g., build, test, deploy" #
