@@ -1,0 +1,1 @@
+export { PetAbstracted } from "./petAbstracted";

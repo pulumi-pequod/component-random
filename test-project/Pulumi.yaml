@@ -1,0 +1,14 @@
+name: abstracted-pets-and-things
+description: A Pulumi YAML program that consumes a component written in typescript.
+runtime: yaml
+packages:
+  random-abstracted: https://github.com/mitchellgerdisch/component-random-abstracted@0.1.2
+variables: {}
+resources:
+  myPetName:
+    type: random-abstracted:PetAbstracted
+    properties:
+      size: "medium"
+outputs:
+  myPetName:
+    value: ${myPetName.petName}
