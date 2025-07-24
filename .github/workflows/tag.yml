@@ -6,7 +6,7 @@ on:
       - '*' # Trigger on any tag push.
 
 jobs:
-  release-binaries:
+  distribute-release:
     runs-on: ubuntu-latest
 
     steps:
