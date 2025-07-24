@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*' # Trigger on any tag push.
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   distribute-release:
@@ -28,5 +29,7 @@ jobs:
           echo "Directory tree:"
           find . -type f -not -path './.git/*' | head -20
 
-      - name: Next step
-        run: echo "Perform your release actions here, e.g., build, test, deploy" #
+      - name: Publish Component to Pulumi Org
+        run: |
+          echo "Doing stuff"
+          pulumi version 
