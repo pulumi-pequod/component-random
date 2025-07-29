@@ -6,8 +6,6 @@ on:
       - '*' # Trigger on any tag push.
   workflow_dispatch: # Allows manual triggering of the workflow
 
-
-
 jobs:
   distribute-release:
     permissions:
@@ -28,22 +26,6 @@ jobs:
         with:
           organization: pequod
           requested-token-type: urn:pulumi:token-type:access_token:organization
-
-      # - name: Show repository contents
-      #   run: |
-      #     echo "Current working directory: $(pwd)"
-      #     echo "Git tag: ${{ github.ref_name }}"
-      #     echo "Git commit: $(git rev-parse HEAD)"
-      #     echo "Repository: ${{ github.repository }}"
-      #     echo "Repository owner: ${{ github.repository_owner }}"
-      #     echo "Repository name: ${{ github.event.repository.name }}"
-      #     echo "Repository URL: https://github.com/${{ github.repository }}"
-      #     echo ""
-      #     echo "Repository contents:"
-      #     ls -la
-      #     echo ""
-      #     echo "Directory tree:"
-      #     find . -type f -not -path './.git/*' | head -20
 
       - name: Publish Component to Pulumi Org
         if: github.event_name == 'push'
