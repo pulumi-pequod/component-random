@@ -41,6 +41,9 @@ jobs:
       # Skip publishing if the workflow is manually triggered.
       - name: Manual run - Skip publishing
         if: github.event_name == 'workflow_dispatch'
+        env:
+          API_ENDPOINT: "https://api.pulumi.com"
+          ORG: "pequod"
         run: |
           echo "This is a manual workflow run."
           echo "Skipping component publishing to prevent accidental releases."
