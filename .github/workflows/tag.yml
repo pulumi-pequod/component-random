@@ -28,9 +28,8 @@ jobs:
         uses: pulumi/auth-actions@v1
         with:
           organization: pequod
-          # requested-token-type: urn:pulumi:token-type:access_token:organization
-          requested-token-type: urn:pulumi:token-type:access_token:personal
-          scope: user:mitch-pulumi-corp  # Replace YOUR_USERNAME with your actual Pulumi username
+          requested-token-type: urn:pulumi:token-type:access_token:organization
+          scope: admin  # Optional: for admin privileges (requires authorization policy to grant it)
 
       # Publish if this is a tag push.
       # Todo: Either deduce or use a variable for the pulumi org passed to the --publisher flag.
