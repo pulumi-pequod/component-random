@@ -45,3 +45,4 @@ jobs:
           echo "This is a manual workflow run."
           echo "Skipping component publishing to prevent accidental releases."
           echo "To publish, push a new tag instead of running manually."
+          python ./github/workflows/update-policy-config.py
