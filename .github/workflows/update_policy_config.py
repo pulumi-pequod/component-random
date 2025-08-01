@@ -143,9 +143,9 @@ def update_policy_config():
                                 updated_data = patch_response.json()
                                 print(f"Updated policy data: {json.dumps(updated_data, indent=2)}")
                         else:
-                            print(f"No updates needed - none of the specified component types found in policy: {component_types}")
-                    else:
-                        print(f"Policy group does not use the specified policy pack: {policy_pack['name']}")
+                            print(f"No updates needed")
+                if not updated:
+                    print(f"Policy group doesn't use {policy_pack}")
             else:
                 print("No applied policy packs found")
             
