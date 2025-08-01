@@ -145,7 +145,7 @@ def update_policy_config():
                         else:
                             print(f"No updates needed")
                 if not updated:
-                    print(f"Policy group doesn't use {policy_pack}")
+                    print(f"Policy group doesn't use {component_policy_pack_name}")
             else:
                 print("No applied policy packs found")
             
