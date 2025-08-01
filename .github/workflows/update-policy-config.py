@@ -43,7 +43,7 @@ def update_policy_config():
     
     # Add authentication if token is provided
     if auth_token:
-        headers['Authorization'] = f'Bearer {auth_token}'
+        headers['Authorization'] = f'token {auth_token}'
 
     # Loop through each policy group
     for policy_group in policy_groups:
