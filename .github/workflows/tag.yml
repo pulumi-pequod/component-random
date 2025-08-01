@@ -52,8 +52,8 @@ jobs:
           PULUMI_API_ENDPOINT: ${{ env.PULUMI_API_ENDPOINT }}
           PULUMI_ORG: ${{ env.PULUMI_ORG }}
           POLICY_GROUPS: ${{ env.POLICY_GROUPS }}
-          # Use the tag as the component type and version.
-          PULUMI_COMPONENT_TYPE_VERSIONS: '[{"${{ env.COMPONENT_TYPE }}": "${{ github.ref_name }}"}]'
+          COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
+          COMPONENT_VERSION: ${{ github.ref_name }}
         run: python ./.github/workflows/update-policy-config.py
 
       # Skip publishing if the workflow is manually triggered.
