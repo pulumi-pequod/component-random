@@ -13,9 +13,8 @@ def update_policy_config():
         print("Error: PULUMI_ORG environment variable is required")
         sys.exit(1)
     
-    policy_groups_str = os.environ.get('POLICY_GROUPS')
-
     # Parse POLICY_GROUPS JSON string into a list
+    policy_groups_str = os.environ.get('POLICY_GROUPS')
     try:
         policy_groups = json.loads(policy_groups_str) if policy_groups_str else []
         if not isinstance(policy_groups, list):
@@ -27,31 +26,16 @@ def update_policy_config():
         sys.exit(1)
 
     component_versions_str = os.environ.get('PULUMI_COMPONENT_TYPE_VERSIONS')
-    print(f"DEBUG: PULUMI_COMPONENT_TYPE_VERSIONS raw value: '{component_versions_str}'")
-    print(f"DEBUG: Type of raw value: {type(component_versions_str)}")
-    
     try:
-        if component_versions_str:
-            component_versions = json.loads(component_versions_str)
-            print(f"DEBUG: Parsed JSON successfully: {component_versions}")
-        else:
-            component_versions = {}
-            print("DEBUG: No PULUMI_COMPONENT_TYPE_VERSIONS provided, using empty dict")
-            
-        if not isinstance(component_versions, dict):
-            print(f"Error: PULUMI_COMPONENT_TYPE_VERSIONS must be a JSON object, got {type(component_versions)}")
-            print(f"Parsed value: {component_versions}")
+        component_versions = json.loads(component_versions_str)
+        if not isinstance(component_versions, list):
+            print("Error: COMPONENT_VERSIONS must be a JSON array")
             sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"Error parsing PULUMI_COMPONENT_TYPE_VERSIONS JSON: {e}")
-        print(f"PULUMI_COMPONENT_TYPE_VERSIONS value: '{component_versions_str}'")
-        print(f"Length of value: {len(component_versions_str) if component_versions_str else 0}")
+        print(f"Error parsing COMPONENT_VERSIONS JSON: {e}")
+        print(f"COMPONENT_VERSIONS value: {component_versions_str}")
         sys.exit(1)
-
-    if not component_versions:
-        print("Error: PULUMI_COMPONENT_TYPE_VERSIONS environment variable is required and must contain at least one component")
-        sys.exit(1)
-
+            
     # Print environment variables for debugging
 
     print("environment variables:")
@@ -100,15 +84,16 @@ def update_policy_config():
 
                     # Find and update component versions
                     for component in allowed_versions:
-                        if 'type' in component and 'version' in component:
-                            component_type = component['type']
-                            # Check if this component type needs to be updated
-                            if component_type in component_versions:
-                                old_version = component['version']
-                                new_version = component_versions[component_type]
-                                component['version'] = new_version  # Update to new version
-                                print(f"Updated {component_type} version from {old_version} to {new_version}")
-                                updated = True
+                        print(f"Checking component: {component}")
+                        # if 'type' in component and 'version' in component:
+                        #     component_type = component['type']
+                        #     # Check if this component type needs to be updated
+                        #     if component_type in component_versions:
+                        #         old_version = component['version']
+                        #         new_version = component_versions[component_type]
+                        #         component['version'] = new_version  # Update to new version
+                        #         print(f"Updated {component_type} version from {old_version} to {new_version}")
+                        #         updated = True
                 
                 if updated:
                     # Prepare PATCH request body in the required format
