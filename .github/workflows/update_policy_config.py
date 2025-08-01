@@ -75,10 +75,9 @@ def update_policy_config():
             if 'appliedPolicyPacks' in policy_data and policy_data['appliedPolicyPacks']:
                 # Process all policy packs in this policy group
                 for policy_pack in policy_data['appliedPolicyPacks']:
-                    print("policy pack: ", policy_pack)
                     # Look to see if this policy group uses the specified policy pack
                     if 'name' in policy_pack and policy_pack['name'] == component_policy_pack_name:
-                        print(f"Found policy group that uses policy pack: {policy_pack['name']}")
+                        print(f"{policy_group} uses policy pack: {policy_pack['name']}")
 
                         if 'config' in policy_pack and 'check-component-versions' in policy_pack['config']:
                             allowed_versions = policy_pack['config']['check-component-versions']['allowedComponentVersions']
@@ -90,7 +89,7 @@ def update_policy_config():
                             for component in allowed_versions:
                                 if 'type' in component and 'version' in component:
                                     component_type = component['type']
-                                    print(f"Checking component: {component_type}")
+                                    # print(f"Checking component: {component_type}")
                                     
                                     # Check if this component type needs to be updated
                                     new_version = get_component_version(component_type, component_types, component_version)
@@ -100,8 +99,8 @@ def update_policy_config():
                                         component['version'] = new_version  # Update to new version
                                         print(f"Updated {component_type} version from {old_version} to {new_version}")
                                         updated = True
-                                    else:
-                                        print(f"No update needed for {component_type}")
+                                    # else:
+                                        # print(f"No update needed for {component_type}")
                                 else:
                                     print(f"Component missing type or version: {component}")
                             
