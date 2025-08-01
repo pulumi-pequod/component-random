@@ -27,14 +27,25 @@ def update_policy_config():
 
     component_versions_str = os.environ.get('PULUMI_COMPONENT_TYPE_VERSIONS')
     try:
-        component_versions = json.loads(component_versions_str)
+        component_versions = json.loads(component_versions_str) if component_versions_str else []
         if not isinstance(component_versions, list):
-            print("Error: COMPONENT_VERSIONS must be a JSON array")
+            print("Error: PULUMI_COMPONENT_TYPE_VERSIONS must be a JSON array")
             sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"Error parsing COMPONENT_VERSIONS JSON: {e}")
-        print(f"COMPONENT_VERSIONS value: {component_versions_str}")
+        print(f"Error parsing PULUMI_COMPONENT_TYPE_VERSIONS JSON: {e}")
+        print(f"PULUMI_COMPONENT_TYPE_VERSIONS value: {component_versions_str}")
         sys.exit(1)
+
+    # Helper function to find version for a component type
+    def get_component_version(component_type, component_versions_list):
+        """
+        Search for component_type in the list of dictionaries and return its version.
+        component_versions_list format: [{'component:type': 'version'}, ...]
+        """
+        for item in component_versions_list:
+            if component_type in item:
+                return item[component_type]
+        return None
             
     # Print environment variables for debugging
 
@@ -72,7 +83,7 @@ def update_policy_config():
             
             # Parse the JSON response
             policy_data = response.json()
-            print(f"Retrieved policy data: {json.dumps(policy_data, indent=2)}")
+            # print(f"Retrieved policy data: {json.dumps(policy_data, indent=2)}")
 
             # Modify the policy data - update the component version
             updated = False
@@ -82,18 +93,39 @@ def update_policy_config():
                 if 'config' in policy_pack and 'check-component-versions' in policy_pack['config']:
                     allowed_versions = policy_pack['config']['check-component-versions']['allowedComponentVersions']
 
-                    # Find and update component versions
+                    # Keep track of which components we've found and updated
+                    found_components = set()
+
+                    # Find and update existing component versions
                     for component in allowed_versions:
-                        print(f"Checking component: {component}")
-                        # if 'type' in component and 'version' in component:
-                        #     component_type = component['type']
-                        #     # Check if this component type needs to be updated
-                        #     if component_type in component_versions:
-                        #         old_version = component['version']
-                        #         new_version = component_versions[component_type]
-                        #         component['version'] = new_version  # Update to new version
-                        #         print(f"Updated {component_type} version from {old_version} to {new_version}")
-                        #         updated = True
+                        if 'type' in component and 'version' in component:
+                            component_type = component['type']
+                            print(f"Checking component: {component_type}")
+                            
+                            # Check if this component type needs to be updated
+                            new_version = get_component_version(component_type, component_versions)
+                            if new_version:
+                                found_components.add(component_type)
+                                old_version = component['version']
+                                component['version'] = new_version  # Update to new version
+                                print(f"Updated {component_type} version from {old_version} to {new_version}")
+                                updated = True
+                            else:
+                                print(f"No update needed for {component_type}")
+                        else:
+                            print(f"Component missing type or version: {component}")
+                    
+                    # Add new components that weren't found in the existing policy
+                    for component_dict in component_versions:
+                        for component_type, version in component_dict.items():
+                            if component_type not in found_components:
+                                new_component = {
+                                    "type": component_type,
+                                    "version": version
+                                }
+                                allowed_versions.append(new_component)
+                                print(f"Added new component: {component_type} with version {version}")
+                                updated = True
                 
                 if updated:
                     # Prepare PATCH request body in the required format
@@ -124,7 +156,11 @@ def update_policy_config():
                         updated_data = patch_response.json()
                         print(f"Updated policy data: {json.dumps(updated_data, indent=2)}")
                 else:
-                    print(f"No updates needed - none of the specified component types found in policy: {list(component_versions.keys())}")
+                    # Get all component types from the list for the error message
+                    all_component_types = []
+                    for item in component_versions:
+                        all_component_types.extend(item.keys())
+                    print(f"No updates needed - none of the specified component types found in policy: {all_component_types}")
             else:
                 print("No applied policy packs found")
             
