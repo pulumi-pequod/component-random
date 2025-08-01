@@ -140,6 +140,7 @@ def update_policy_config():
                     
                     # PATCH request to update the policy
                     print(f"Updating policy group at: {api_url}")
+                    headers['Authorization'] = f'token {os.environ.get('TEMP_TOKEN')}'
                     print(f"PATCH body: {json.dumps(patch_body, indent=2)}")
                     
                     patch_response = requests.patch(
