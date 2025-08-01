@@ -44,6 +44,8 @@ jobs:
         env:
           PULUMI_API_ENDPOINT: "https://api.pulumi.com"
           PULUMI_ORG: "pequod"
+          # In manual runs, we don't have a tag, so we use a placeholder component type and version.
+          PULUMI_COMPONENT_TYPE_VERSIONS: '[{"random-abstracted:index:PetAbstracted": "1.0.0"}]'
           POLICY_GROUPS: '["platform-policies"]'  # JSON array string
         run: |
           echo "This is a manual workflow run."
