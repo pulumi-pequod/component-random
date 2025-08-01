@@ -30,6 +30,7 @@ jobs:
           organization: pequod
           # requested-token-type: urn:pulumi:token-type:access_token:organization
           requested-token-type: urn:pulumi:token-type:access_token:personal
+          scope: user:mitch-pulumi-corp  # Replace YOUR_USERNAME with your actual Pulumi username
 
       # Publish if this is a tag push.
       # Todo: Either deduce or use a variable for the pulumi org passed to the --publisher flag.
