@@ -8,7 +8,7 @@ def update_policy_config():
     # Get environment variables passed in from the workflow
     api_endpoint = os.environ.get('PULUMI_API_ENDPOINT') or 'https://api.pulumi.com'
     auth_token = os.environ.get('PULUMI_ACCESS_TOKEN')  # The access token is set by the OIDC Issuer that is invoked in the github action
-    policy_pack = os.environ.get('POLICY_PACK')  # The name of the policy pack to update
+    component_policy_pack_name = os.environ.get('POLICY_PACK')  # The name of the policy pack to update
     component_version = os.environ.get('COMPONENT_VERSION')
     org = os.environ.get('PULUMI_ORG') 
     if not org:
@@ -77,7 +77,7 @@ def update_policy_config():
                 for policy_pack in policy_data['appliedPolicyPacks']:
                     print("policy pack: ", policy_pack)
                     # Look to see if this policy group uses the specified policy pack
-                    if 'name' in policy_pack and policy_pack['name'] == policy_pack:
+                    if 'name' in policy_pack and policy_pack['name'] == component_policy_pack_name:
                         print(f"Found policy group that uses policy pack: {policy_pack['name']}")
 
                         if 'config' in policy_pack and 'check-component-versions' in policy_pack['config']:
