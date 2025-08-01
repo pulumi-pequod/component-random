@@ -140,13 +140,6 @@ def update_policy_config():
                     
                     # PATCH request to update the policy
                     print(f"Updating policy group at: {api_url}")
-                    temp_token = os.environ.get('TEMP_TOKEN')
-                    if temp_token:
-                        headers['Authorization'] = f'token {temp_token}'
-                        print(f"Using TEMP_TOKEN for authentication: {temp_token}")
-                    else:
-                        print("No TEMP_TOKEN found, using default auth token")
-
                     print(f"PATCH body: {json.dumps(patch_body, indent=2)}")
                     
                     patch_response = requests.patch(
