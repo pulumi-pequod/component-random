@@ -55,7 +55,7 @@ jobs:
           PULUMI_ORG: ${{ env.PULUMI_ORG }}
           COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
           COMPONENT_VERSION: ${{ github.ref_name }}
-        run: python ./.github/workflows/update_policy-config.py
+        run: python ./.github/workflows/update_policy_config.py
 
       # Skip publishing if the workflow is manually triggered.
       - name: Manual run - Skip publishing
