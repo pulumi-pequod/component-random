@@ -27,14 +27,25 @@ def update_policy_config():
         sys.exit(1)
 
     component_versions_str = os.environ.get('PULUMI_COMPONENT_TYPE_VERSIONS')
+    print(f"DEBUG: PULUMI_COMPONENT_TYPE_VERSIONS raw value: '{component_versions_str}'")
+    print(f"DEBUG: Type of raw value: {type(component_versions_str)}")
+    
     try:
-        component_versions = json.loads(component_versions_str) if component_versions_str else {}
+        if component_versions_str:
+            component_versions = json.loads(component_versions_str)
+            print(f"DEBUG: Parsed JSON successfully: {component_versions}")
+        else:
+            component_versions = {}
+            print("DEBUG: No PULUMI_COMPONENT_TYPE_VERSIONS provided, using empty dict")
+            
         if not isinstance(component_versions, dict):
-            print("Error: PULUMI_COMPONENT_TYPE_VERSIONS must be a JSON object")
+            print(f"Error: PULUMI_COMPONENT_TYPE_VERSIONS must be a JSON object, got {type(component_versions)}")
+            print(f"Parsed value: {component_versions}")
             sys.exit(1)
     except json.JSONDecodeError as e:
         print(f"Error parsing PULUMI_COMPONENT_TYPE_VERSIONS JSON: {e}")
-        print(f"PULUMI_COMPONENT_TYPE_VERSIONS value: {component_versions_str}")
+        print(f"PULUMI_COMPONENT_TYPE_VERSIONS value: '{component_versions_str}'")
+        print(f"Length of value: {len(component_versions_str) if component_versions_str else 0}")
         sys.exit(1)
 
     if not component_versions:
