@@ -64,7 +64,7 @@ jobs:
           PULUMI_API_ENDPOINT: ${{ env.PULUMI_API_ENDPOINT }}
           PULUMI_ORG: ${{ env.PULUMI_ORG }}
           COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
-          COMPONENT_VERSION: '6.6.8"
+          COMPONENT_VERSION: '6.6.8'
         run: |
           echo "This is a manual workflow run."
           echo "Skipping component publishing to prevent accidental releases."
