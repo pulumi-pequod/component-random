@@ -52,11 +52,8 @@ def update_policy_config():
     print("environment variables:")
     print(f"API_ENDPOINT: {api_endpoint}")
     print(f"ORG: {org}")
-    print(f"POLICY_GROUPS (raw): {policy_groups_str}")
-    print(f"POLICY_GROUPS (parsed): {policy_groups}")
-    print(f"PULUMI_ACCESS_TOKEN: {auth_token}")
-    print(f"PULUMI_COMPONENT_TYPE_VERSIONS (raw): {component_versions_str}")
-    print(f"PULUMI_COMPONENT_TYPE_VERSIONS (parsed): {component_versions}")
+    print(f"POLICY_GROUPS: {policy_groups}")
+    print(f"PULUMI_COMPONENT_TYPE_VERSIONS: {component_versions}")
 
     # Construct the API URL
     base_api_url = f"{api_endpoint}/api/orgs/{org}/policygroups"

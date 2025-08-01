@@ -16,7 +16,7 @@ jobs:
     
     # Define variables at the job level
     env:
-      COMPONENT_TYPE: "random-abstracted:index:PetAbstracted"
+      COMPONENT_TYPES: '["random-abstracted:index:PetAbstracted"]'
       PULUMI_ORG: "pequod"
       PULUMI_API_ENDPOINT: "https://api.pulumi.com"
       POLICY_GROUPS: '["default-policy-group", "goo-test"]'
