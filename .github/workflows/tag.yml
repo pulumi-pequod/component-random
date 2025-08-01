@@ -21,18 +21,24 @@ jobs:
           ref: ${{ github.ref }} # Checkout the specific tag that triggered the workflow
           fetch-depth: 0 # Ensures the build matches the git tag.
 
+      # Uses Pulumi Cloud Github OIDC issuer
+      # Note that if adding a new component and copying this code, you will need to update the
+      # github oidc issuer stack that is used in the org to manage the issuers.
       - name: Authenticate to Pulumi
         uses: pulumi/auth-actions@v1
         with:
           organization: pequod
           requested-token-type: urn:pulumi:token-type:access_token:organization
 
+      # Publish if this is a tag push.
+      # Todo: Either deduce or use a variable for the pulumi org passed to the --publisher flag.
       - name: Publish Component to Pulumi Org
         if: github.event_name == 'push'
         run: |
           echo "Publishing latest component version to the pequod Pulumi org."
           pulumi package publish https://github.com/${{ github.repository }} --publisher pequod
 
+      # Skip publishing if the workflow is manually triggered.
       - name: Manual run - Skip publishing
         if: github.event_name == 'workflow_dispatch'
         run: |
