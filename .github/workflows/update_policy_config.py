@@ -71,11 +71,11 @@ def update_policy_config():
             # Modify the policy data - update the component version to reflect:
             # - new component type version if it exists
             # - add new component type and version if it doesn't exist
-            print("Updating policy pack configuration...")
             updated = False
             if 'appliedPolicyPacks' in policy_data and policy_data['appliedPolicyPacks']:
                 # Process all policy packs in this policy group
                 for policy_pack in policy_data['appliedPolicyPacks']:
+                    print("policy pack: ", policy_pack)
                     # Look to see if this policy group uses the specified policy pack
                     if 'name' in policy_pack and policy_pack['name'] == policy_pack:
                         print(f"Found policy group that uses policy pack: {policy_pack['name']}")
@@ -145,6 +145,8 @@ def update_policy_config():
                                 print(f"Updated policy data: {json.dumps(updated_data, indent=2)}")
                         else:
                             print(f"No updates needed - none of the specified component types found in policy: {component_types}")
+                    else:
+                        print(f"Policy group does not use the specified policy pack: {policy_pack['name']}")
             else:
                 print("No applied policy packs found")
             
