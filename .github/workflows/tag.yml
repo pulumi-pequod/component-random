@@ -14,12 +14,14 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    # Define variables at the job level
+    ### Set these environment variables for the given component.
+    ### POLICY_PACK is the name of the policy pack that contains the checks for the component version. This will be the same value for the entire Pulumi org.
+    ### COMPONENT_TYPES lists is the list of component types that THIS component repo provides.
     env:
       COMPONENT_TYPES: '["random-abstracted:index:PetAbstracted"]'
+      POLICY_PACK: "platform-team"
       PULUMI_ORG: "pequod"
       PULUMI_API_ENDPOINT: "https://api.pulumi.com"
-      POLICY_GROUPS: '["default-policy-group", "goo-test"]'
 
     steps:
       - name: Checkout repository
@@ -51,15 +53,20 @@ jobs:
         env:
           PULUMI_API_ENDPOINT: ${{ env.PULUMI_API_ENDPOINT }}
           PULUMI_ORG: ${{ env.PULUMI_ORG }}
-          POLICY_GROUPS: ${{ env.POLICY_GROUPS }}
           COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
           COMPONENT_VERSION: ${{ github.ref_name }}
-        run: python ./.github/workflows/update-policy-config.py
+        run: python ./.github/workflows/update_policy-config.py
 
       # Skip publishing if the workflow is manually triggered.
       - name: Manual run - Skip publishing
         if: github.event_name == 'workflow_dispatch'
+        env:
+          PULUMI_API_ENDPOINT: ${{ env.PULUMI_API_ENDPOINT }}
+          PULUMI_ORG: ${{ env.PULUMI_ORG }}
+          COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
+          COMPONENT_VERSION: '6.6.6'
         run: |
           echo "This is a manual workflow run."
           echo "Skipping component publishing to prevent accidental releases."
           echo "To publish, push a new tag instead of running manually."
+          python ./.github/workflows/update_policy-config.py
