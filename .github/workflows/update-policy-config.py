@@ -169,7 +169,6 @@ def update_policy_config():
             if hasattr(e, 'response') and e.response is not None:
                 print(f"Status code: {e.response.status_code}")
                 print(f"Response text: {e.response.text}")
-            sys.exit(1)
         except json.JSONDecodeError as e:
             print(f"Failed to parse JSON response: {e}")
             sys.exit(1)
