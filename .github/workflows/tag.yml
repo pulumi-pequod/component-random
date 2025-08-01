@@ -57,6 +57,15 @@ jobs:
           COMPONENT_VERSION: ${{ github.ref_name }}
         run: python ./.github/workflows/update_policy_config.py
 
+      # Get latest tag for manual runs
+      - name: Get latest tag
+        if: github.event_name == 'workflow_dispatch'
+        id: latest_tag
+        run: |
+          LATEST_TAG=$(git tag --sort=-version:refname | head -1)
+          echo "Latest tag: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
       # Skip publishing if the workflow is manually triggered.
       - name: Manual run - Skip publishing
         if: github.event_name == 'workflow_dispatch'
@@ -64,9 +73,10 @@ jobs:
           PULUMI_API_ENDPOINT: ${{ env.PULUMI_API_ENDPOINT }}
           PULUMI_ORG: ${{ env.PULUMI_ORG }}
           COMPONENT_TYPES: ${{ env.COMPONENT_TYPES }}
-          COMPONENT_VERSION: '6.6.9'
+          COMPONENT_VERSION: ${{ steps.latest_tag.outputs.tag }}
         run: |
           echo "This is a manual workflow run."
           echo "Skipping component publishing to prevent accidental releases."
           echo "To publish, push a new tag instead of running manually."
+          echo "Using latest tag: ${{ steps.latest_tag.outputs.tag }}"
           python ./.github/workflows/update_policy_config.py
