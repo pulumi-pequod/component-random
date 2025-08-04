@@ -21,7 +21,7 @@ jobs:
       # FUTURE HOPE: Deduce this by parsing the component code or, better yet, be able to get this
       # via a Pulumi Cloud API after publishing.
       COMPONENT_TYPES: '["random-abstracted:index:PetAbstracted"]'
-      PULUMI_ORG: 'pulumi-pequod' # The Pulumi organization to publish the component to.
+      PULUMI_ORG: 'pequod' # The Pulumi organization to publish the component to.
 
     steps:
       - name: Checkout repository
