@@ -29,16 +29,13 @@ jobs:
         with:
           ref: ${{ github.ref }} # Checkout the specific tag that triggered the workflow
           fetch-depth: 0 # Ensures the build matches the git tag.
-
-      # Uses Pulumi Cloud Github OIDC issuer
-      # Note that if adding a new component and copying this code, you will need to update the
-      # github oidc issuer stack that is used in the org to manage the issuers.
+      
       - name: Authenticate to Pulumi
         uses: pulumi/auth-actions@v1
         with:
           organization: ${{ env.PULUMI_ORG }}
           requested-token-type: urn:pulumi:token-type:access_token:organization
-          scope: admin  # Need admin privileges - the github oidc issuer is configured to allow this scope
+          scope: admin
 
       ### Tag Push Steps
       # Publish if this is a tag push.
@@ -53,9 +50,9 @@ jobs:
         if: github.event_name == 'push'
         uses: pulumi-pequod/pequod-policies/shared-github-actions/component-version-policy-config@main
         with:
+          pulumi_org: ${{ env.PULUMI_ORG }}
           component_types: ${{ env.COMPONENT_TYPES }}
           component_version: ${{ github.ref_name }}
-          pulumi_access_token: ${{ env.PULUMI_ACCESS_TOKEN }} # Set by the pulumi/auth-actions step
       ### End Tag Push Steps
 
       ### Manual Run Steps
@@ -74,6 +71,6 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         uses: pulumi-pequod/pequod-policies/shared-github-actions/component-version-policy-config@main
         with:
+          pulumi_org: ${{ env.PULUMI_ORG }}
           component_types: ${{ env.COMPONENT_TYPES }}
           component_version: ${{ steps.latest_tag.outputs.tag }}
-          pulumi_access_token: ${{ env.PULUMI_ACCESS_TOKEN }} # Set by the pulumi/auth-actions step
