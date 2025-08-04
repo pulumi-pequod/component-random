@@ -55,6 +55,7 @@ jobs:
         with:
           component_types: ${{ env.COMPONENT_TYPES }}
           component_version: ${{ github.ref_name }}
+          pulumi_access_token: ${{ env.PULUMI_ACCESS_TOKEN }} # Set by the pulumi/auth-actions step
       ### End Tag Push Steps
 
       ### Manual Run Steps
@@ -75,3 +76,4 @@ jobs:
         with:
           component_types: ${{ env.COMPONENT_TYPES }}
           component_version: ${{ steps.latest_tag.outputs.tag }}
+          pulumi_access_token: ${{ env.PULUMI_ACCESS_TOKEN }} # Set by the pulumi/auth-actions step
