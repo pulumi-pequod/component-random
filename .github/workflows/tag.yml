@@ -37,7 +37,21 @@ jobs:
           requested-token-type: urn:pulumi:token-type:access_token:organization
           scope: admin
 
-      ### Tag Push Steps
+      # Determine the version to use - either the triggered tag or latest tag for manual runs
+      - name: Determine Component Version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            # For tag pushes, use the tag that triggered the workflow
+            VERSION="${{ github.ref_name }}"
+            echo "Using triggered tag: $VERSION"
+          else
+            # For manual runs, get the latest tag
+            VERSION=$(git tag --sort=-version:refname | head -1)
+            echo "Manual run: Using latest tag: $VERSION"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       # Publish if this is a tag push.
       - name: Publish Component to Pulumi Org
         if: github.event_name == 'push'
@@ -45,32 +59,13 @@ jobs:
           echo "Publishing latest component version to the ${{ env.PULUMI_ORG }} Pulumi org."
           pulumi package publish https://github.com/${{ github.repository }} --publisher ${{ env.PULUMI_ORG }}
 
-      # Update the policy config with the new component version.
+      # Update the policy config with the new component version regardless of if this is 
+      # a triggered or manual run.
+      # Uses composite action in the pequod-policies repository to update the policy config.
       - name: Update Policy Config
-        if: github.event_name == 'push'
         uses: pulumi-pequod/pequod-policies/shared-github-actions/component-version-policy-config@main
         with:
           pulumi_org: ${{ env.PULUMI_ORG }}
           component_types: ${{ env.COMPONENT_TYPES }}
-          component_version: ${{ github.ref_name }}
-      ### End Tag Push Steps
+          component_version: ${{ steps.version.outputs.version }}
 
-      ### Manual Run Steps
-      # No publishing for manual runs, but we still want to update the policy config with the latest version.
-      # Get latest tag for manual runs
-      - name: Manual Run - Get latest tag
-        if: github.event_name == 'workflow_dispatch'
-        id: latest_tag
-        run: |
-          LATEST_TAG=$(git tag --sort=-version:refname | head -1)
-          echo "Latest tag: $LATEST_TAG"
-          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-
-      # Skip publishing if the workflow is manually triggered.
-      - name: Manual run - Update policy config with latest tag
-        if: github.event_name == 'workflow_dispatch'
-        uses: pulumi-pequod/pequod-policies/shared-github-actions/component-version-policy-config@main
-        with:
-          pulumi_org: ${{ env.PULUMI_ORG }}
-          component_types: ${{ env.COMPONENT_TYPES }}
-          component_version: ${{ steps.latest_tag.outputs.tag }}
