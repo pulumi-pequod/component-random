@@ -2,12 +2,17 @@ import * as pulumi from "@pulumi/pulumi";
 import * as random from "@pulumi/random";
 
 export interface PetAbstractedArgs {
+    /**
+     * The size of the pet name to generate. Valid values are "small", "medium", "large", "xlarge", or a number representing the length of the pet name.
+     **/
     size: string;
 }
 
 // This resource abstracts using the RandomPet resource to generate a pet name based on a size parameter.
 export class PetAbstracted extends pulumi.ComponentResource {
-    // Return the generated pet name
+    /**
+     * The generated pet name.
+     **/
     public readonly petName: pulumi.Output<string>;
 
     constructor(name: string, args: PetAbstractedArgs, opts?: pulumi.ComponentResourceOptions) {
