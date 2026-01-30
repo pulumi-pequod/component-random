@@ -1,4 +1,58 @@
 # component-random
+Pulumi component that provides an abstraction for the Random provider's `petName` resource.
+
+# Usage
+## Specify Package in `Pulumi.yaml`
+
+Add the following to your `Pulumi.yaml` file:
+Note: If no version is specified, the latest version will be used.
+
+```
+packages:
+  component-random: https://github.com/pulumi-pequod/component-random[@vX.Y.Z]
+``` 
+
+## Use SDK in Program
+
+### Python
+```
+from pulumi_pequod_random_abstracted import PetAbstracted
+
+pet_name = PetAbstracted("my-petname", 
+                        size="medium")
+```
+
+### Typescript
+```
+import { PetAbstracted } from "@pulumi-pequod/random-abstracted";
+
+const petName = new PetAbstracted(baseName, { size: "large" })
+```
+
+### Dotnet
+```
+using PulumiPequod.RandomAbstracted;
+
+var petName = new PetAbstracted("myPetName");
+```
+
+### YAML
+```
+  petName:
+    type: random-abstracted:PetAbstracted
+    properties:
+      size: ${size}
+```
+
+
+
+
+
+
+
+
+
+
 A simple component that uses the random provider. 
 It is here mostly for testing and simple demonstration use-cases. 
 
